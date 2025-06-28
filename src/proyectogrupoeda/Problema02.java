@@ -14,7 +14,7 @@ public class Problema02 {
 
         System.out.println("Cantidad de digitos de la primera lista:");
         int n1 = sc.nextInt();
-        System.out.println("Ingrese los digitos:");
+        System.out.println("Ingrese los digitos (separados por un espacio):");
         for (int i = 0; i < n1; i++) {
             lista1.insertarFinal(sc.nextInt());
         }
