@@ -14,7 +14,7 @@ public class Problema03 {
         System.out.println("Ingrese la cantidad de elementos:");
         int n = sc.nextInt();
 
-        System.out.println("Ingrese los elementos:");
+        System.out.println("Ingrese los elementos (separados por un espacio):");
         for (int i = 0; i < n; i++) {
             lista.insertarFinal(sc.nextInt());
         }
