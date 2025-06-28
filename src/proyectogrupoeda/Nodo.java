@@ -3,17 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyectogrupoeda;
-
-/**
- *
- * @author rquir
- */
 public class Nodo {
     int clave;
     Nodo siguiente;
-
-    public Nodo(int clave) {
-        this.clave = clave;
+    Nodo anterior;  // Nuevo puntero hacia el nodo anterior
+    
+    public Nodo(int valor) {
+        this.clave = valor;
         this.siguiente = null;
+        this.anterior = null;
     }
 }
