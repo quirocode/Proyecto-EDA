@@ -227,7 +227,6 @@ public class ListaEnlazada {
     for (int i = 1; i <= mayor.size; i++) {
         int posMayor = mayor.size - i + 1;
         int posMenor = menor.size - i + 1;
-
         int valorMayor = mayor.obtenerValor(posMayor);
         int valorMenor = (posMenor >= 1) ? menor.obtenerValor(posMenor) : 0;
 
@@ -239,10 +238,8 @@ public class ListaEnlazada {
         } else {
             prestamo = 0;
         }
-
         resultado.insertarInicio(resta);
     }
-
     // Eliminar ceros a la izquierda
     while (resultado.obtenerTamanio() > 1 && resultado.obtenerValor(1) == 0) {
         resultado.eliminarEnPosicion(1);
@@ -254,18 +251,38 @@ public class ListaEnlazada {
     //MÉTODOS PROBLEMA 3
     public void reordenar() {
     if (size <= 2) return;
+    Nodo medio = head;
+    Nodo fin = head;
+    while (fin != null && fin.siguiente != null) {
+        medio = medio.siguiente;
+        fin = fin.siguiente.siguiente;  
+    }
 
-    int mitad = (size + 1) / 2;
+    Nodo segundaMitad = medio.siguiente;
+    medio.siguiente = null;  
+    segundaMitad = revertirLista(segundaMitad);
 
-    for (int i = 1; i < mitad; i++) {
-        int posFinal = size - i + 1;
-        int valorFinal = obtenerValor(posFinal);
-
-        insertarEnPosicion(valorFinal, 2 * i);
-        eliminarEnPosicion(posFinal + 1); // +1 porque la lista ha crecido
+    Nodo primeraMitad = head;
+    while (segundaMitad != null) {
+        Nodo temp1 = primeraMitad.siguiente;
+        Nodo temp2 = segundaMitad.siguiente;
+        primeraMitad.siguiente = segundaMitad;
+        segundaMitad.siguiente = temp1;
+        primeraMitad = temp1;
+        segundaMitad = temp2;
     }
 }
-
+    private Nodo revertirLista(Nodo nodo) {
+    Nodo anterior = null;
+    Nodo actual = nodo;
+    while (actual != null) {
+        Nodo siguiente = actual.siguiente;
+        actual.siguiente = anterior;
+        anterior = actual;
+        actual = siguiente;
+    }
+    return anterior;
+}
     
     
 }
