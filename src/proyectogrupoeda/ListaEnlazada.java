@@ -10,10 +10,12 @@ package proyectogrupoeda;
  */
 public class ListaEnlazada {
     private Nodo head;
+    private Nodo tail;  // Referencia al último nodo
     private int size;
 
     public ListaEnlazada() {
         this.head = null;
+        this.tail = null;  // Inicializamos tail como null
         this.size = 0;
     }
 
@@ -26,25 +28,31 @@ public class ListaEnlazada {
     }
 
     public void mostrar() {
-    if (estaVacia()) {
-        System.out.println("Lista vacía");
-        return;
-    }
-    Nodo actual = head;
-    while (actual != null) {
-        System.out.print(actual.clave);
-        if (actual.siguiente != null) {
-            System.out.print(" --> "); // Imprimir " --> " solo si hay un siguiente nodo
+        if (estaVacia()) {
+            System.out.println("Lista vacía");
+            return;
         }
-        actual = actual.siguiente;
+        Nodo actual = head;
+        while (actual != null) {
+            System.out.print(actual.clave);
+            if (actual.siguiente != null) {
+                System.out.print(" --> ");
+            }
+            actual = actual.siguiente;
+        }
+        System.out.println();
     }
-    System.out.println(); // Para nueva línea después de mostrar la lista
-}
 
     public void insertarInicio(int valor) {
         Nodo nuevo = new Nodo(valor);
-        nuevo.siguiente = head;
-        head = nuevo;
+        if (estaVacia()) {
+            head = nuevo;
+            tail = nuevo;  // Si la lista está vacía, head y tail apuntan al mismo nodo
+        } else {
+            nuevo.siguiente = head;
+            head.anterior = nuevo;
+            head = nuevo;
+        }
         size++;
     }
 
@@ -52,12 +60,11 @@ public class ListaEnlazada {
         Nodo nuevo = new Nodo(valor);
         if (estaVacia()) {
             head = nuevo;
+            tail = nuevo;  // Si la lista está vacía, head y tail apuntan al mismo nodo
         } else {
-            Nodo actual = head;
-            while (actual.siguiente != null) {
-                actual = actual.siguiente;
-            }
-            actual.siguiente = nuevo;
+            tail.siguiente = nuevo;
+            nuevo.anterior = tail;
+            tail = nuevo;  // Actualizamos tail para que apunte al último nodo
         }
         size++;
     }
@@ -78,6 +85,8 @@ public class ListaEnlazada {
                 actual = actual.siguiente;
             }
             nuevo.siguiente = actual.siguiente;
+            nuevo.anterior = actual;
+            actual.siguiente.anterior = nuevo;  // Actualizamos el anterior del siguiente nodo
             actual.siguiente = nuevo;
             size++;
         }
@@ -100,7 +109,13 @@ public class ListaEnlazada {
             System.out.println("Lista vacía");
             return;
         }
-        head = head.siguiente;
+        if (head == tail) {  // Si solo hay un nodo
+            head = null;
+            tail = null;
+        } else {
+            head = head.siguiente;
+            head.anterior = null;
+        }
         size--;
     }
 
@@ -109,14 +124,12 @@ public class ListaEnlazada {
             System.out.println("Lista vacía");
             return;
         }
-        if (head.siguiente == null) {
+        if (head == tail) {  // Si solo hay un nodo
             head = null;
+            tail = null;
         } else {
-            Nodo actual = head;
-            while (actual.siguiente.siguiente != null) {
-                actual = actual.siguiente;
-            }
-            actual.siguiente = null;
+            tail = tail.anterior;
+            tail.siguiente = null;
         }
         size--;
     }
@@ -128,27 +141,33 @@ public class ListaEnlazada {
         }
         if (posicion == 1) {
             eliminarInicio();
+        } else if (posicion == size) {
+            eliminarFinal();
         } else {
             Nodo actual = head;
-            for (int i = 1; i < posicion - 1; i++) {
+            for (int i = 1; i < posicion; i++) {
                 actual = actual.siguiente;
             }
-            actual.siguiente = actual.siguiente.siguiente;
+            actual.anterior.siguiente = actual.siguiente;
+            if (actual.siguiente != null) {
+                actual.siguiente.anterior = actual.anterior;
+            }
             size--;
         }
     }
 
     public void revertir() {
-        Nodo anterior = null;
         Nodo actual = head;
-        Nodo siguiente;
+        Nodo temp = null;
         while (actual != null) {
-            siguiente = actual.siguiente;
-            actual.siguiente = anterior;
-            anterior = actual;
-            actual = siguiente;
+            temp = actual.anterior;
+            actual.anterior = actual.siguiente;
+            actual.siguiente = temp;
+            actual = actual.anterior;
         }
-        head = anterior;
+        if (temp != null) {
+            head = temp.anterior;
+        }
     }
     
     //MÉTODOS PROBLEMA 1
